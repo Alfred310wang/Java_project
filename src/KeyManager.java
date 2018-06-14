@@ -1,175 +1,120 @@
-import java.awt.event.KeyAdapter;
+package Mine;
+
+import java.awt.Font;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.net.URL;
 
-public class KeyManager extends KeyAdapter {
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
-	protected boolean up, down, left, right;
-	protected int state_now = 0, state_next, state;
-	private int moveUp, moveDown, moveRight, moveLeft, put;
-	protected boolean up2, down2, left2, right2;
-	protected int state_now2 = 0, state_next2, state2;
-	private int moveUp2, moveDown2, moveRight2, moveLeft2, put2;
-	public int bomb_counter = 0;
+public class KeyManager implements KeyListener {
+	private boolean[] keys;
+	private int x = 300;
+	private boolean next;
+	public boolean left, right, enter;
 
 	public KeyManager() {
-		moveUp = KeyEvent.VK_UP;
-		moveDown = KeyEvent.VK_DOWN;
-		moveLeft = KeyEvent.VK_LEFT;
-		moveRight = KeyEvent.VK_RIGHT;
-		put = KeyEvent.VK_ENTER;
-		moveUp2 = KeyEvent.VK_W;
-		moveDown2 = KeyEvent.VK_S;
-		moveLeft2 = KeyEvent.VK_A;
-		moveRight2 = KeyEvent.VK_D;
-		put2 = KeyEvent.VK_SPACE;
+		keys = new boolean[256];
+	}
+
+	
+	public void tick() {
+		left = keys[KeyEvent.VK_LEFT];
+		right = keys[KeyEvent.VK_RIGHT];
+		enter = keys[KeyEvent.VK_ENTER];
+
+	}
+
+	
+	public void DisplayP2(JLabel arrow2) {
+		try {
+			// ImageIcon icon = new ImageIcon("/images/333.png");
+			ImageIcon icon = new ImageIcon(new URL("https://i.imgur.com/fXbu8CJ.gif"));
+			Character_page.arrow2.setIcon(icon);
+			Character_page.arrow2.setFont(new Font("SansSerif", Font.ITALIC, 28));
+			Character_page.arrow2.setText("P2");
+			Character_page.arrow2.setLocation(x, 100);
+			Character_page.arrow2.setSize(200, 100);
+			Character_page.frame_C.add(Character_page.arrow2);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		super.keyPressed(e);
-		if (!ButtonListener.jjjjjj) {
-			if (e.getKeyCode() == moveUp) {
-				up = true;
-				state_next = this.moveUp;			
-			}
-			if (e.getKeyCode() == moveDown) {
-				down = true;
-				state_next = this.moveDown;
-			}
-			if (e.getKeyCode() == moveRight) {
-				right = true;
-				state_next = this.moveRight;
-			}
-			if (e.getKeyCode() == moveLeft) {
-				left = true;
-				state_next = moveLeft;
-			}
-			if (state_now == 0) {
-				state_now = state_next;
-				if (state_next != 0) {
-					state = state_now;
-				}
-			}
-			if (e.getKeyCode() == put && !Game.bomb_exist[(Character.getX()-445)/100][(Character.getY()-5)/100]) {
-				if (bomb_counter == 50)
-					bomb_counter = 0;
-				GameState.bomb[bomb_counter] = new Bomb((Character.getX()-445)/100, (Character.getY()-5)/100, 6);
-				GameState.first_bb[bomb_counter] = true;
-				GameState.second_bb[bomb_counter] = true;
-				GameState.third_bb[bomb_counter] = true;
-				GameState.fourth_bb[bomb_counter] = true;
-				bomb_counter++;
-			}
-			if (e.getKeyCode() == put2 && !Game.bomb_exist[(Player2.getXXXX()-445)/100][(Player2.getYYYY()-5)/100]) {
-				if (bomb_counter == 50)
-					bomb_counter = 0;
-				GameState.bomb[bomb_counter] = new Bomb((Player2.getXXXX()-445)/100, (Player2.getYYYY()-5)/100, 6);
-				GameState.first_bb[bomb_counter] = true;
-				GameState.second_bb[bomb_counter] = true;
-				GameState.third_bb[bomb_counter] = true;
-				GameState.fourth_bb[bomb_counter] = true;
-				bomb_counter++;
-			}
-			
-			////////////////
-			if (e.getKeyCode() == moveUp2) {
-				up2 = true;
-				state_next2 = this.moveUp2;			
-				System.out.println("sersrsers");
-			}
-			if (e.getKeyCode() == moveDown2) {
-				down2 = true;
-				state_next2 = this.moveDown2;
-			}
-			if (e.getKeyCode() == moveRight2) {
-				right2 = true;
-				state_next2 = this.moveRight2;
-			}
-			if (e.getKeyCode() == moveLeft2) {
-				left2 = true;
-				state_next2 = moveLeft2;
-			}
-			if (state_now2 == 0) {
-				state_now2 = state_next2;
-				if (state_next2 != 0) {
-					state2 = state_now2;
-				}
-			}
-			
-			
-		}
+		// keys[e.getKeyCode()] = true;
+		
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_RIGHT:
+			if (next == false) {
+				if (Start_Menu.character_choose1 < 4)
+					Start_Menu.character_choose1 = Start_Menu.character_choose1 + 1;
+								
+				x=300 + (Start_Menu.character_choose1 -1)* 300; 
+				Character_page.P1_arrow_move(x);
+			} 
+			else 
+			{
+				if (Start_Menu.character_choose2 < 4 && ((Start_Menu.character_choose2 +1 )!= Start_Menu.character_choose1  ))
+					Start_Menu.character_choose2 = Start_Menu.character_choose2 + 1;
+				else if(Start_Menu.character_choose2 < 3 &&((Start_Menu.character_choose2 +1 ) == Start_Menu.character_choose1))
+					Start_Menu.character_choose2 = Start_Menu.character_choose2 + 2;
 
+				x=300 + (Start_Menu.character_choose2 -1)* 300; 
+				Character_page.P2_arrow_move(x);
+			}
+			
+			break;
+
+		case KeyEvent.VK_LEFT:
+			if (next == false) {
+				if (Start_Menu.character_choose1 > 1 )
+					Start_Menu.character_choose1 = Start_Menu.character_choose1 - 1;
+				x=300 + (Start_Menu.character_choose1 -1)* 300; 
+				Character_page.P1_arrow_move(x);
+			} else {
+				
+				if (Start_Menu.character_choose2 >1 &&( (Start_Menu.character_choose2 -1 )!= Start_Menu.character_choose1 ) )
+					Start_Menu.character_choose2 = Start_Menu.character_choose2 - 1;
+				else if(Start_Menu.character_choose2  > 2 &&( (Start_Menu.character_choose2 -1 ) == Start_Menu.character_choose1) )
+					Start_Menu.character_choose2 = Start_Menu.character_choose2 - 2;
+				
+				
+				x=300 + (Start_Menu.character_choose2 -1)* 300; 
+				Character_page.P2_arrow_move(x);
+			}
+			break;
+
+		case KeyEvent.VK_ENTER:
+			if (Start_Menu.Player_Number == 2 &&next == false) {
+				if(x!=300) 
+				    x = 300;
+				else 
+					x=600;
+				Start_Menu.character_choose2 =(x-300)/300+1;
+				next = true;
+				DisplayP2(Character_page.arrow2);
+				DisplayP2(Character_page.arrow2);
+			}
+			else
+				Character_page.frame_C.dispose();
+			 System.out.println(Start_Menu.character_choose1);
+			 System.out.println(Start_Menu.character_choose2);
+			 
+			break;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		super.keyReleased(e);
-		state_next = 0;
-		if (e.getKeyCode() == moveUp) {
-			up = false;
-		}
-		if (e.getKeyCode() == moveDown) {
-			down = false;
-		}
-		if (e.getKeyCode() == moveRight) {
-			right = false;
-		}
-		if (e.getKeyCode() == moveLeft) {
-			left = false;
-		}
-		state_next2 = 0;
-		if (e.getKeyCode() == moveUp2) {
-			up2 = false;
-		}
-		if (e.getKeyCode() == moveDown2) {
-			down2 = false;
-		}
-		if (e.getKeyCode() == moveRight2) {
-			right2 = false;
-		}
-		if (e.getKeyCode() == moveLeft2) {
-			left2 = false;
-		}
+		keys[e.getKeyCode()] = false;
 	}
 
-	public int getMoveUp() {
-		return moveUp;
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
-
-	public void setMoveUp(int moveUp) {
-		this.moveUp = moveUp;
-	}
-
-	public void setMoveDown(int moveDown) {
-		this.moveDown = moveDown;
-	}
-
-	public void setMoveRight(int moveRight) {
-		this.moveRight = moveRight;
-	}
-
-	public void setMoveLeft(int moveLeft) {
-		this.moveLeft = moveLeft;
-	}
-	
-	public int getMoveUp2() {
-		return moveUp2;
-	}
-
-	public void setMoveUp2(int moveUp) {
-		this.moveUp2 = moveUp;
-	}
-
-	public void setMoveDown2(int moveDown) {
-		this.moveDown2 = moveDown;
-	}
-
-	public void setMoveRight2(int moveRight) {
-		this.moveRight2 = moveRight;
-	}
-
-	public void setMoveLeft2(int moveLeft) {
-		this.moveLeft2 = moveLeft;
-	}
-
 }
+
